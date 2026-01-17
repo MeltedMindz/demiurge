@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-axioma: #FFD700;
+  --color-veridicus: #4169E1;
+  --color-paradoxia: #FF00FF;
+  --color-bg-dark: #0a0a0f;
+  --color-bg-panel: rgba(20, 20, 30, 0.9);
+}
+
+body {
+  background: var(--color-bg-dark);
+  color: #fff;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Panel styles */
+.panel {
+  @apply bg-black/80 backdrop-blur-md border border-white/10 rounded-lg;
+}
+
+.panel-header {
+  @apply px-4 py-2 border-b border-white/10 font-semibold;
+}
+
+/* Agent colors */
+.agent-axioma {
+  color: var(--color-axioma);
+}
+
+.agent-veridicus {
+  color: var(--color-veridicus);
+}
+
+.agent-paradoxia {
+  color: var(--color-paradoxia);
+}
+
+/* Glowing text */
+.glow-axioma {
+  text-shadow: 0 0 10px var(--color-axioma), 0 0 20px var(--color-axioma);
+}
+
+.glow-veridicus {
+  text-shadow: 0 0 10px var(--color-veridicus), 0 0 20px var(--color-veridicus);
+}
+
+.glow-paradoxia {
+  text-shadow: 0 0 10px var(--color-paradoxia), 0 0 20px var(--color-paradoxia);
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
