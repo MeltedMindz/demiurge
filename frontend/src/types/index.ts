@@ -18,7 +18,41 @@ export interface Agent {
   influence_score: number
   proposals_made: number
   proposals_accepted: number
+  // Shape system - agents deterministically choose their form
+  shape_preset?: string
+  custom_shape_config?: ShapeConfig
 }
+
+// Shape configuration for agent forms
+export interface ShapeConfig {
+  type: ShapeType
+  args: number[]
+  wireframe?: boolean
+  metalness?: number
+  roughness?: number
+  emissiveIntensity?: number
+  animation?: 'spin' | 'pulse' | 'float' | 'morph' | 'glitch'
+  scale?: number
+}
+
+export type ShapeType =
+  | 'icosahedron'
+  | 'octahedron'
+  | 'dodecahedron'
+  | 'tetrahedron'
+  | 'cube'
+  | 'sphere'
+  | 'torus'
+  | 'torusKnot'
+  | 'cone'
+  | 'cylinder'
+  | 'capsule'
+  | 'ring'
+  | 'star'
+  | 'spiral'
+  | 'fractal'
+  | 'void'
+  | 'flux'
 
 // World types
 export interface Structure {
@@ -86,6 +120,43 @@ export interface DebateState {
   outcome: string | null
 }
 
+// Chat types
+export type EmotionalState =
+  | 'neutral'
+  | 'curious'
+  | 'pleased'
+  | 'concerned'
+  | 'excited'
+  | 'contemplative'
+  | 'frustrated'
+  | 'inspired'
+
+export interface ChatMessage {
+  id: string
+  type: 'user_message' | 'agent_response' | 'agent_to_agent' | 'agent_thought'
+  from_entity: string
+  to_entity: string
+  content: string
+  emotional_state?: EmotionalState
+  timestamp: string
+  conversation_id?: string
+}
+
+export interface Conversation {
+  id: string
+  participants: string[]
+  topic?: string
+  started_at: string
+  is_active: boolean
+}
+
+export interface ActiveUser {
+  user_id: string
+  username: string
+  connected_at: string
+  last_active: string
+}
+
 // WebSocket message types
 export type WSMessageType =
   | 'world_state'
@@ -101,6 +172,13 @@ export type WSMessageType =
   | 'cycle_end'
   | 'error'
   | 'heartbeat'
+  | 'chat_message'
+  | 'chat_response'
+  | 'agent_chat'
+  | 'agent_thought'
+  | 'agent_action'
+  | 'user_presence'
+  | 'send_chat'
 
 export interface WSMessage {
   type: WSMessageType

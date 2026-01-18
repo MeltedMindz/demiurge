@@ -10,7 +10,7 @@ const PHASE_DURATIONS: Record<string, number> = {
 }
 
 export default function CycleProgress() {
-  const { debate, cycleNumber } = useWorldStore()
+  const { debate } = useWorldStore()
   const [progress, setProgress] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
 

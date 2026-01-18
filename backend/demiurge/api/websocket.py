@@ -35,10 +35,19 @@ class MessageType(str, Enum):
     ERROR = "error"
     HEARTBEAT = "heartbeat"
 
+    # Chat messages
+    CHAT_MESSAGE = "chat_message"           # User message to agent
+    CHAT_RESPONSE = "chat_response"         # Agent response to user
+    AGENT_CHAT = "agent_chat"               # Agent-to-agent conversation
+    AGENT_THOUGHT = "agent_thought"         # Agent's internal thought (broadcast)
+    AGENT_ACTION = "agent_action"           # Agent autonomous action
+    USER_PRESENCE = "user_presence"         # User joined/left
+
     # Client -> Server
     SUBSCRIBE = "subscribe"
     UNSUBSCRIBE = "unsubscribe"
     REQUEST_STATE = "request_state"
+    SEND_CHAT = "send_chat"                 # User sends message to agent
 
 
 @dataclass
@@ -177,6 +186,68 @@ class ConnectionManager:
             data={"cycle_number": cycle_number, "summary": summary}
         ))
 
+    # ============== Chat broadcast methods ==============
+
+    async def broadcast_chat_response(self, agent_id: str, agent_name: str, user_id: str, message: str, emotional_state: str = None):
+        """Broadcast agent response to user chat"""
+        await self.broadcast(WSMessage(
+            type=MessageType.CHAT_RESPONSE,
+            data={
+                "agent_id": agent_id,
+                "agent_name": agent_name,
+                "user_id": user_id,
+                "message": message,
+                "emotional_state": emotional_state
+            }
+        ))
+
+    async def broadcast_agent_chat(self, from_agent: str, to_agent: str, message: str, conversation_id: str = None):
+        """Broadcast agent-to-agent conversation"""
+        await self.broadcast(WSMessage(
+            type=MessageType.AGENT_CHAT,
+            data={
+                "from_agent": from_agent,
+                "to_agent": to_agent,
+                "message": message,
+                "conversation_id": conversation_id
+            }
+        ))
+
+    async def broadcast_agent_thought(self, agent_id: str, agent_name: str, thought: str):
+        """Broadcast agent's internal thought"""
+        await self.broadcast(WSMessage(
+            type=MessageType.AGENT_THOUGHT,
+            data={
+                "agent_id": agent_id,
+                "agent_name": agent_name,
+                "thought": thought
+            }
+        ))
+
+    async def broadcast_agent_action(self, agent_id: str, agent_name: str, action_type: str, target: str = None, content: str = None):
+        """Broadcast agent's autonomous action"""
+        await self.broadcast(WSMessage(
+            type=MessageType.AGENT_ACTION,
+            data={
+                "agent_id": agent_id,
+                "agent_name": agent_name,
+                "action_type": action_type,
+                "target": target,
+                "content": content
+            }
+        ))
+
+    async def broadcast_user_presence(self, user_id: str, action: str, username: str = None):
+        """Broadcast user joined/left"""
+        await self.broadcast(WSMessage(
+            type=MessageType.USER_PRESENCE,
+            data={
+                "user_id": user_id,
+                "action": action,  # "joined" or "left"
+                "username": username
+            }
+        ))
+
 
 # Global connection manager instance
 ws_manager = ConnectionManager()
@@ -186,6 +257,7 @@ ws_manager = ConnectionManager()
 async def websocket_endpoint(websocket: WebSocket):
     """Main WebSocket endpoint"""
     await ws_manager.connect(websocket)
+    user_id = None
 
     try:
         # Send initial world state
@@ -203,6 +275,7 @@ async def websocket_endpoint(websocket: WebSocket):
             try:
                 message = json.loads(data)
                 msg_type = message.get("type")
+                msg_data = message.get("data", {})
 
                 if msg_type == MessageType.REQUEST_STATE.value:
                     # Client requesting current state
@@ -218,6 +291,29 @@ async def websocket_endpoint(websocket: WebSocket):
                         data={"status": "alive"}
                     ))
 
+                elif msg_type == MessageType.SEND_CHAT.value:
+                    # User sending chat message to agent
+                    from .chat_manager import chat_manager
+                    response = await chat_manager.send_user_message(
+                        user_id=msg_data.get("user_id", user_id or "anonymous"),
+                        agent_id=msg_data.get("agent_id"),
+                        message=msg_data.get("message", "")
+                    )
+                    # Response is broadcast automatically by chat_manager
+
+                elif msg_type == MessageType.USER_PRESENCE.value:
+                    # User joining/leaving
+                    from .chat_manager import chat_manager
+                    action = msg_data.get("action")
+                    uid = msg_data.get("user_id")
+                    username = msg_data.get("username")
+
+                    if action == "joined":
+                        user_id = uid
+                        await chat_manager.user_connected(uid, username)
+                    elif action == "left":
+                        await chat_manager.user_disconnected(uid)
+
             except json.JSONDecodeError:
                 await ws_manager.send_personal(websocket, WSMessage(
                     type=MessageType.ERROR,
@@ -225,9 +321,16 @@ async def websocket_endpoint(websocket: WebSocket):
                 ))
 
     except WebSocketDisconnect:
+        # Clean up user if they had registered
+        if user_id:
+            from .chat_manager import chat_manager
+            await chat_manager.user_disconnected(user_id)
         await ws_manager.disconnect(websocket)
     except Exception as e:
         logger.error(f"WebSocket error: {e}")
+        if user_id:
+            from .chat_manager import chat_manager
+            await chat_manager.user_disconnected(user_id)
         await ws_manager.disconnect(websocket)
 
 

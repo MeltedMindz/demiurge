@@ -1,9 +1,26 @@
+import { useState, useEffect } from 'react'
 import { useWorldStore } from '../../stores/worldStore'
 
 export default function LoadingScreen() {
-  const { isLoading, isConnected } = useWorldStore()
+  const { isLoading, isConnected, setLoading } = useWorldStore()
+  const [showSkip, setShowSkip] = useState(false)
+
+  // Show skip button after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSkip(true), 3000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const handleSkip = () => {
+    setLoading(false)
+  }
 
   if (!isLoading && isConnected) {
+    return null
+  }
+
+  // Allow dismissing if user clicks skip
+  if (!isLoading) {
     return null
   }
 
@@ -47,9 +64,19 @@ export default function LoadingScreen() {
         <p className="text-white/50 mb-4">3D AI Philosophy Sandbox</p>
 
         {/* Status */}
-        <p className="text-sm text-white/30">
+        <p className="text-sm text-white/30 mb-4">
           {isConnected ? 'Loading world...' : 'Connecting to server...'}
         </p>
+
+        {/* Skip button */}
+        {showSkip && !isConnected && (
+          <button
+            onClick={handleSkip}
+            className="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white/70 hover:text-white transition-all"
+          >
+            Explore Without Server
+          </button>
+        )}
       </div>
     </div>
   )

@@ -10,6 +10,10 @@ from enum import Enum
 import random
 import logging
 
+from ..world.tool_system import get_tools_for_agent_prompt, parse_tool_action, ToolRequest
+from ..memory.interactions import InteractionMemory, InteractionType, EmotionalState
+from .autonomy import AgentAutonomy, AutonomousAction, DesireType
+
 logger = logging.getLogger("demiurge.agents")
 
 
@@ -118,6 +122,13 @@ class BaseAgent(ABC):
         self.influence_score = 100
         self.proposals_made = 0
         self.proposals_accepted = 0
+
+        # Interaction and Autonomy systems
+        self.interaction_memory = InteractionMemory(agent_id, name)
+        self.autonomy = AgentAutonomy(self)
+
+        # Current emotional state
+        self.emotional_state = EmotionalState.NEUTRAL
 
         logger.info(f"Initialized agent: {name} ({archetype})")
 
@@ -310,3 +321,206 @@ class BaseAgent(ABC):
             "influence_score": self.influence_score,
             "traits": self.traits
         }
+
+    def get_tool_prompt(self) -> str:
+        """Get the tool usage prompt for this agent's archetype"""
+        return get_tools_for_agent_prompt(self.archetype)
+
+    def parse_tool_action_from_response(self, response_text: str) -> Optional[ToolRequest]:
+        """Parse any tool action from a response"""
+        return parse_tool_action(response_text, self.id, self.name)
+
+    # ============== Interaction Methods ==============
+
+    async def receive_user_message(
+        self,
+        user_id: str,
+        message: str,
+        claude_client: Any,
+        conversation_id: Optional[str] = None
+    ) -> str:
+        """
+        Receive and respond to a user message.
+        Records the interaction and generates a response.
+        """
+        # Record the incoming message
+        self.interaction_memory.record_interaction(
+            interaction_type=InteractionType.USER_MESSAGE,
+            from_entity=user_id,
+            to_entity=self.id,
+            content=message,
+            conversation_id=conversation_id,
+            importance=0.7
+        )
+
+        # Generate response using Claude
+        response = await self._generate_user_response(user_id, message, claude_client)
+
+        # Determine emotional state from response
+        self._update_emotional_state(message, response)
+
+        # Record our response
+        self.interaction_memory.record_interaction(
+            interaction_type=InteractionType.AGENT_RESPONSE,
+            from_entity=self.id,
+            to_entity=user_id,
+            content=response,
+            emotional_state=self.emotional_state,
+            conversation_id=conversation_id,
+            importance=0.6
+        )
+
+        # This interaction might trigger desires
+        self.autonomy.add_desire(
+            DesireType.SOCIAL,
+            intensity=0.4,
+            target=user_id,
+            reason="Recent conversation"
+        )
+
+        return response
+
+    @abstractmethod
+    async def _generate_user_response(
+        self,
+        user_id: str,
+        message: str,
+        claude_client: Any
+    ) -> str:
+        """Generate a response to a user message. Override in subclasses."""
+        pass
+
+    async def receive_agent_message(
+        self,
+        from_agent: 'BaseAgent',
+        message: str,
+        claude_client: Any,
+        conversation_id: Optional[str] = None
+    ) -> str:
+        """
+        Receive and respond to a message from another agent.
+        """
+        # Record incoming message
+        self.interaction_memory.record_interaction(
+            interaction_type=InteractionType.AGENT_TO_AGENT,
+            from_entity=from_agent.id,
+            to_entity=self.id,
+            content=message,
+            conversation_id=conversation_id,
+            importance=0.6
+        )
+
+        # Generate response
+        response = await self._generate_agent_response(from_agent, message, claude_client)
+
+        # Record our response
+        self.interaction_memory.record_interaction(
+            interaction_type=InteractionType.AGENT_TO_AGENT,
+            from_entity=self.id,
+            to_entity=from_agent.id,
+            content=response,
+            emotional_state=self.emotional_state,
+            conversation_id=conversation_id,
+            importance=0.5
+        )
+
+        return response
+
+    @abstractmethod
+    async def _generate_agent_response(
+        self,
+        from_agent: 'BaseAgent',
+        message: str,
+        claude_client: Any
+    ) -> str:
+        """Generate a response to another agent's message. Override in subclasses."""
+        pass
+
+    async def initiate_conversation(
+        self,
+        target: 'BaseAgent',
+        topic: Optional[str],
+        claude_client: Any
+    ) -> Tuple[str, str]:
+        """
+        Initiate a conversation with another agent.
+        Returns (conversation_id, opening_message)
+        """
+        # Start conversation in memory
+        participants = [self.id, target.id]
+        conversation = self.interaction_memory.start_conversation(
+            participants=participants,
+            topic=topic
+        )
+
+        # Generate opening message
+        opening = await self._generate_conversation_opener(target, topic, claude_client)
+
+        # Record the opening
+        self.interaction_memory.record_interaction(
+            interaction_type=InteractionType.AGENT_TO_AGENT,
+            from_entity=self.id,
+            to_entity=target.id,
+            content=opening,
+            emotional_state=self.emotional_state,
+            conversation_id=conversation.id,
+            importance=0.5
+        )
+
+        logger.info(f"{self.name} initiated conversation with {target.name}: {topic or 'general'}")
+
+        return conversation.id, opening
+
+    @abstractmethod
+    async def _generate_conversation_opener(
+        self,
+        target: 'BaseAgent',
+        topic: Optional[str],
+        claude_client: Any
+    ) -> str:
+        """Generate an opening message for a conversation. Override in subclasses."""
+        pass
+
+    def check_autonomous_action(self) -> Optional[AutonomousAction]:
+        """
+        Check if the agent wants to take an autonomous action.
+        Call this periodically to allow agents to act on their own.
+        """
+        return self.autonomy.decide_action()
+
+    def update_world_awareness(
+        self,
+        users: List[str],
+        agents: Dict[str, Dict],
+        events: List[Dict]
+    ):
+        """Update the agent's awareness of the world state"""
+        self.autonomy.update_awareness(users, agents, events)
+        self.autonomy.decay_desires(0.1)  # Small decay each update
+
+    def _update_emotional_state(self, input_text: str, response_text: str):
+        """Update emotional state based on interaction content"""
+        # Simple keyword-based emotional detection
+        positive_keywords = ['thank', 'great', 'wonderful', 'agree', 'yes', 'beautiful', 'amazing']
+        negative_keywords = ['wrong', 'disagree', 'no', 'bad', 'terrible', 'hate', 'stupid']
+        curious_keywords = ['why', 'how', 'what', 'explain', 'tell me', 'curious', 'interesting']
+
+        combined = (input_text + " " + response_text).lower()
+
+        if any(kw in combined for kw in curious_keywords):
+            self.emotional_state = EmotionalState.CURIOUS
+        elif any(kw in combined for kw in positive_keywords):
+            self.emotional_state = EmotionalState.PLEASED
+        elif any(kw in combined for kw in negative_keywords):
+            self.emotional_state = EmotionalState.CONCERNED
+        else:
+            self.emotional_state = EmotionalState.NEUTRAL
+
+    def get_interaction_context(self, entity_id: str) -> str:
+        """Get context about past interactions with an entity"""
+        return self.interaction_memory.get_context_for_entity(entity_id)
+
+    def get_recent_interactions(self, limit: int = 10) -> List[Dict]:
+        """Get recent interactions for display"""
+        interactions = self.interaction_memory.recall_interactions(limit=limit)
+        return [i.to_dict() for i in interactions]

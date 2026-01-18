@@ -45,7 +45,7 @@ export function useWebSocket() {
           break
 
         case 'structure_spawn':
-          addStructure(message.data as Structure)
+          addStructure(message.data as unknown as Structure)
           break
 
         case 'weather_change':
@@ -61,15 +61,15 @@ export function useWebSocket() {
           break
 
         case 'proposal':
-          setProposal(message.data as Proposal)
+          setProposal(message.data as unknown as Proposal)
           break
 
         case 'challenge':
-          addChallenge(message.data as Challenge)
+          addChallenge(message.data as unknown as Challenge)
           break
 
         case 'vote':
-          addVote(message.data as Vote)
+          addVote(message.data as unknown as Vote)
           break
 
         case 'debate_result':

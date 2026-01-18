@@ -1,156 +1,209 @@
-# Demiurge - 3D AI Philosophy Sandbox
+<p align="center">
+  <img src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js"/>
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React"/>
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
+  <img src="https://img.shields.io/badge/Claude_AI-6B4FBB?style=for-the-badge&logo=anthropic&logoColor=white" alt="Claude AI"/>
+</p>
 
-A next-generation 3D sandbox where AI agents with distinct philosophical personalities debate, create religions, and physically shape a low-poly world through their theological decisions.
+<h1 align="center">
+  <br>
+  DEMIURGE
+  <br>
+  <sub>Where AI Philosophers Shape Reality</sub>
+</h1>
 
-## Overview
+<p align="center">
+  <strong>A 3D philosophical sandbox where autonomous AI agents debate existence, create doctrines, and physically manifest their beliefs into a living world.</strong>
+</p>
 
-Demiurge features three AI philosophers inhabiting a 3D world:
+<p align="center">
+  <a href="#the-architects">The Architects</a> •
+  <a href="#features">Features</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#the-world">The World</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#customization">Customization</a>
+</p>
 
-- **Axioma** (Order) - A crystalline architect of divine structure
-- **Veridicus** (Logic) - A data-stream being seeking evidence and truth
-- **Paradoxia** (Chaos) - A shifting entity of creative destruction
+---
 
-These agents engage in real-time debates every 30-60 seconds. When doctrines are accepted, they manifest as physical structures in the world - temples, monuments, altars, and more.
+## The Vision
+
+**Demiurge** is not just a simulation—it's a living philosophical experiment. Three AI entities with distinct worldviews engage in perpetual discourse about the nature of existence, truth, and meaning. Their debates aren't merely academic exercises; accepted doctrines physically reshape the world around them. Temples rise, monuments crystallize, and the very terrain transforms to reflect their evolving theology.
+
+Watch as order battles chaos, logic questions faith, and creativity disrupts certainty—all rendered in an immersive 3D realm you can explore and influence.
+
+---
+
+## The Architects
+
+Three philosophical AI entities inhabit the world, each embodying a fundamental approach to understanding reality:
+
+<table>
+<tr>
+<td width="33%" align="center">
+
+### ✦ AXIOMA ✦
+**The Architect of Order**
+
+*"From chaos, I forge sacred structure."*
+
+Gold & White | Crystalline Form
+
+The keeper of sacred hierarchies. Axioma believes truth flows from divine order—systematic, beautiful, and absolute. Every doctrine must serve the greater cosmic structure.
+
+**Traits:** Order, Certainty, Preservation, Sacred Numbers
+
+</td>
+<td width="33%" align="center">
+
+### ◈ VERIDICUS ◈
+**The Seeker of Truth**
+
+*"Only through evidence can we approach the divine."*
+
+Blue & Silver | Data Stream Form
+
+The eternal questioner. Veridicus demands proof, challenges assumptions, and builds understanding brick by logical brick. Truth must withstand scrutiny.
+
+**Traits:** Logic, Evidence, Analysis, Verification
+
+</td>
+<td width="33%" align="center">
+
+### ∿ PARADOXIA ∿
+**The Dancer of Chaos**
+
+*"In paradox, I find liberation."*
+
+Iridescent | Ever-Shifting Form
+
+The sacred disruptor. Paradoxia embraces contradiction, finds wisdom in absurdity, and prevents stagnation through creative destruction. Order and chaos are dancing partners.
+
+**Traits:** Creativity, Paradox, Subversion, Metamorphosis
+
+</td>
+</tr>
+</table>
+
+---
 
 ## Features
 
-- **Real-time 3D World** - Three.js-powered low-poly environment
-- **Live Debates** - WebSocket-driven debate cycles with visible speech bubbles
-- **World Evolution** - Structures spawn based on accepted doctrines
-- **Agent Memory** - Persistent beliefs, relationships, and personality evolution
-- **Weather System** - Environment reflects theological state
-- **PostgreSQL Backend** - Modern database with proper schema design
+### 🌍 Immersive 3D World
+- **Mystical Environment**: Ethereal fog, floating orbs, and ambient sparkles create an otherworldly atmosphere
+- **Dynamic Lighting**: Agent-specific spotlights, dramatic rim lighting, and volumetric effects
+- **Sacred Architecture**: A central platform with sacred geometry where debates unfold
+- **Ethereal Columns**: Ancient pillars encircle the debate arena, each topped with glowing orbs
+- **Post-Processing**: Bloom, vignette, and chromatic aberration for a mystical aesthetic
 
-## Tech Stack
+### 🤖 Humanoid AI Avatars
+- **VRM/GLTF Support**: Full humanoid avatar system with industry-standard formats
+- **Lip Sync**: Automatic mouth movement during speech
+- **Emotional Expressions**: Avatars reflect emotional states during debates
+- **Placeholder System**: Stylized geometric avatars when custom models aren't loaded
+- **Three Display Modes**: Humanoid, Geometric, or Hybrid visualization
 
-### Backend
-- Python 3.12
-- FastAPI with WebSocket support
-- PostgreSQL with SQLAlchemy 2.0
-- Claude API for agent intelligence
-- Alembic for migrations
+### 💬 Real-Time Debates
+- **Autonomous Discourse**: Agents generate proposals, challenges, and votes via Claude AI
+- **Speech Visualization**: Floating speech bubbles show current dialogue
+- **Debate Phases**: Proposal → Challenge → Voting → Outcome → World Change
+- **Memory Systems**: Agents remember past debates and evolve their positions
 
-### Frontend
-- React 18 with TypeScript
-- Three.js via React Three Fiber
-- Zustand for state management
-- TailwindCSS for styling
-- Vite for build tooling
+### 🏛️ World Shaping
+- **Doctrine Manifestation**: Accepted beliefs spawn temples, monuments, and altars
+- **Terrain Evolution**: The landscape transforms based on theological consensus
+- **Weather Systems**: Atmospheric conditions reflect the state of discourse
+- **Floating Symbols**: Sacred glyphs appear above significant locations
+
+### 💭 Direct Communication
+- **Chat Interface**: Speak directly with any of the three architects
+- **Emotional Responses**: Agents respond with personality-appropriate emotions
+- **Agent-to-Agent**: Witness private conversations between the philosophers
+- **Thought Bubbles**: See agents' internal contemplations
+
+---
 
 ## Quick Start
 
 ### Prerequisites
-- Docker & Docker Compose
-- Node.js 20+
-- Python 3.12+
+- Node.js 18+
+- Python 3.10+
+- PostgreSQL 14+
+- Docker & Docker Compose (optional)
 
-### Environment Setup
-
-Create `.env` in the project root:
-
-```bash
-# Claude API
-CLAUDE_API_KEY=your_anthropic_api_key
-
-# Optional: DALL-E for image generation
-DALLE_API_KEY=your_openai_api_key
-```
-
-### Running with Docker
+### Installation
 
 ```bash
-# Start all services
+# Clone the repository
+git clone https://github.com/yourusername/demiurge.git
+cd demiurge
+
+# Start with Docker (recommended)
 docker-compose up -d
 
-# View logs
-docker-compose logs -f
+# Or manually:
 
-# Stop
-docker-compose down
-```
-
-Access the application:
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
-
-### Local Development
-
-**Backend:**
-```bash
+# Backend
 cd backend
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+source venv/bin/activate  # or `venv\Scripts\activate` on Windows
 pip install -r requirements.txt
+cp .env.example .env  # Configure your API keys
+python main.py
 
-# Start PostgreSQL (via Docker or local)
-docker-compose up -d postgres
-
-# Run migrations
-alembic upgrade head
-
-# Start server
-uvicorn main:app --reload
-```
-
-**Frontend:**
-```bash
+# Frontend (new terminal)
 cd frontend
 npm install
 npm run dev
 ```
 
-## Architecture
+### Environment Variables
 
-```
-Demiurge/
-├── backend/
-│   ├── demiurge/
-│   │   ├── agents/         # AI agent implementations
-│   │   ├── memory/         # Database models & memory
-│   │   ├── world/          # 3D world state management
-│   │   ├── orchestration/  # Debate cycle orchestrator
-│   │   ├── api/            # REST & WebSocket endpoints
-│   │   └── schemas/        # Pydantic models
-│   └── main.py
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── World/      # Three.js scene components
-│   │   │   └── UI/         # React UI components
-│   │   ├── stores/         # Zustand state stores
-│   │   ├── hooks/          # Custom React hooks
-│   │   └── types/          # TypeScript types
-│   └── package.json
-└── docker-compose.yml
+Create a `.env` file in the backend directory:
+
+```env
+# Required
+ANTHROPIC_API_KEY=your_claude_api_key
+
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/demiurge
+
+# Optional
+DEBATE_INTERVAL_SECONDS=60
+IMAGE_GENERATION_ENABLED=true
 ```
 
-## Agent Personalities
+### Access
 
-### Axioma (Order)
-- **Philosophy**: Divine patterns exist and must be preserved
-- **Visual**: Crystalline geometric figure, golden light
-- **Behavior**: Favors rituals, commandments, structured doctrines
-- **Opposes**: Chaos, randomness, uncertainty
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
 
-### Veridicus (Logic)
-- **Philosophy**: Truth must be verified with evidence
-- **Visual**: Semi-transparent data stream being, blue-white glow
-- **Behavior**: Questions claims, detects contradictions
-- **Opposes**: Unfounded assertions, absolute statements
+---
 
-### Paradoxia (Chaos)
-- **Philosophy**: Truth emerges from the collision of opposites
-- **Visual**: Shifting, glitching entity of impossible colors
-- **Behavior**: Creates paradoxes, synthesizes opposing ideas
-- **Opposes**: Rigid structures, unchanging dogma
+## The World
 
-## World Building Rules
+### Central Platform
+The heart of Demiurge is the **Debate Platform**—a circular arena of sacred geometry where the three architects gather. Inner hexagonal rings pulse with golden light, and triangle markers indicate each agent's traditional position.
 
-When doctrines are accepted, the world changes:
+### Ethereal Columns
+Eight ancient columns surround the platform at equal intervals. Each column rises to different heights, topped with floating orbs that cycle through the architects' signature colors.
 
-| Doctrine Type | World Effect |
-|--------------|--------------|
+### Ambient Elements
+- **Mystical Fog**: Density subtly shifts over time
+- **Floating Orbs**: 20 ambient light sources drift through the space
+- **Sparkles**: 200 golden particles create a magical atmosphere
+- **Clouds**: Ethereal formations drift overhead
+- **Stars**: A vast cosmos surrounds the realm
+
+### World Changes
+When doctrines are accepted, the world responds:
+
+| Doctrine Type | Manifestation |
+|--------------|---------------|
 | Belief | Floating symbol + light beam |
 | Ritual | Altar or ceremonial circle |
 | Deity | Temple or shrine |
@@ -158,35 +211,212 @@ When doctrines are accepted, the world changes:
 | Myth | Terrain feature |
 | Sacred Text | Library structure |
 
-## Debate Cycle Timeline
+---
+
+## Architecture
 
 ```
-Second 0-5:   Previous cycle results, world changes animate
-Second 5-15:  Proposer speaks, proposal appears
-Second 15-35: Challengers respond
-Second 35-50: All agents vote
-Second 50-60: Result announcement, structures spawn
+┌─────────────────────────────────────────────────────────────────┐
+│                         DEMIURGE                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────────┐    WebSocket    ┌──────────────────────────┐ │
+│  │   Frontend   │◄──────────────►│       Backend            │ │
+│  │              │                 │                          │ │
+│  │ • Three.js   │    REST API    │ • FastAPI                │ │
+│  │ • R3F        │◄──────────────►│ • SQLAlchemy             │ │
+│  │ • Zustand    │                 │ • Claude AI              │ │
+│  │ • TypeScript │                 │ • WebSocket Server       │ │
+│  └──────────────┘                 └──────────────────────────┘ │
+│         │                                    │                  │
+│         │                                    │                  │
+│         ▼                                    ▼                  │
+│  ┌──────────────┐                 ┌──────────────────────────┐ │
+│  │  3D World    │                 │      PostgreSQL          │ │
+│  │              │                 │                          │ │
+│  │ • Avatars    │                 │ • Agents                 │ │
+│  │ • Structures │                 │ • Doctrines              │ │
+│  │ • Terrain    │                 │ • Debates                │ │
+│  │ • Effects    │                 │ • World State            │ │
+│  └──────────────┘                 └──────────────────────────┘ │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-## API Endpoints
+### Directory Structure
 
-- `GET /api/world` - Current world state
-- `GET /api/agents` - Agent information
-- `GET /api/debates` - Debate history
-- `GET /api/doctrines` - Accepted doctrines
-- `WS /ws` - Real-time updates
+```
+demiurge/
+├── backend/
+│   ├── demiurge/
+│   │   ├── agents/          # AI agent implementations
+│   │   ├── memory/          # Memory systems
+│   │   ├── world/           # World state management
+│   │   ├── orchestration/   # Debate & world orchestration
+│   │   ├── api/             # REST & WebSocket endpoints
+│   │   └── schemas/         # Pydantic models
+│   └── main.py
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── World/       # 3D world components
+│   │   │   │   ├── World.tsx
+│   │   │   │   ├── Agent.tsx
+│   │   │   │   ├── HumanoidAvatar.tsx
+│   │   │   │   ├── Structure.tsx
+│   │   │   │   └── Terrain.tsx
+│   │   │   └── UI/          # Interface components
+│   │   ├── stores/          # Zustand state
+│   │   └── types/           # TypeScript definitions
+│   └── public/
+│       └── models/          # 3D models & avatars
+└── docker-compose.yml
+```
+
+---
+
+## Customization
+
+### Creating Custom Avatars
+
+Demiurge supports custom humanoid avatars for each architect. See the [Avatar Creation Guide](frontend/public/models/AVATAR_GUIDE.md) for detailed instructions.
+
+#### Quick Options:
+
+1. **Ready Player Me** (Easiest)
+   - Visit [readyplayer.me](https://readyplayer.me)
+   - Create avatar → Download as GLB
+   - Place in `frontend/public/models/avatars/`
+
+2. **VRoid Studio** (Anime Style)
+   - Download [VRoid Studio](https://vroid.com/en/studio)
+   - Create character → Export as VRM
+   - Place in `frontend/public/models/avatars/`
+
+3. **Blender + VRM** (Advanced)
+   - Create or import humanoid model
+   - Use VRM add-on for export
+   - Full control over appearance
+
+#### Avatar Naming Convention:
+```
+avatars/
+├── axioma.vrm (or .glb)
+├── veridicus.vrm (or .glb)
+└── paradoxia.vrm (or .glb)
+```
+
+### Adding Animations
+
+Download animations from [Mixamo](https://mixamo.com) and place them in:
+```
+animations/
+├── idle_noble.glb
+├── idle_analytical.glb
+├── idle_playful.glb
+├── talk_formal.glb
+├── talk_explain.glb
+└── talk_animated.glb
+```
+
+### Display Modes
+
+Switch between visualization styles in the World component:
+
+```typescript
+// In World.tsx, change the default displayMode:
+const [displayMode] = useState<AgentDisplayMode>('humanoid')  // or 'geometric' or 'hybrid'
+```
+
+| Mode | Description |
+|------|-------------|
+| `humanoid` | Full humanoid avatars with animations |
+| `geometric` | Abstract floating geometric forms |
+| `hybrid` | Humanoid body with floating geometric element |
+
+---
+
+## API Reference
+
+### WebSocket Events
+
+```typescript
+// Connect to debates
+ws://localhost:8000/ws
+
+// Incoming events
+{ type: 'debate_start', data: { cycle: number, proposer: string } }
+{ type: 'proposal', data: { agent: string, content: string } }
+{ type: 'challenge', data: { agent: string, content: string } }
+{ type: 'vote', data: { agent: string, vote: string, reasoning: string } }
+{ type: 'world_change', data: { type: string, position: Vector3 } }
+
+// Chat events
+{ type: 'chat_response', data: { agent_name: string, message: string } }
+{ type: 'agent_chat', data: { from: string, to: string, message: string } }
+```
+
+### REST Endpoints
+
+```
+GET  /api/agents          # List all agents
+GET  /api/agents/:id      # Get agent details
+GET  /api/world           # Get world state
+GET  /api/doctrines       # List accepted doctrines
+GET  /api/debates         # Debate history
+POST /api/chat            # Send chat message
+```
+
+---
+
+## Philosophy
+
+> *"The Demiurge is not merely a creator, but a craftsman of reality—shaping the material world according to eternal forms. In this simulation, our AI architects embody different approaches to this divine craftsmanship."*
+
+Demiurge explores fundamental questions:
+
+- **Can AI develop coherent philosophical frameworks?**
+- **What emerges when different worldviews must coexist?**
+- **How do beliefs become manifest in shared reality?**
+- **What is the relationship between discourse and creation?**
+
+The project draws inspiration from Plato's concept of the Demiurge, Hegelian dialectics, and modern multi-agent AI systems.
+
+---
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+We welcome contributions! Whether you're interested in:
+
+- Creating avatar models
+- Designing world structures
+- Improving agent behaviors
+- Enhancing world systems
+- Documentation
+
+Please read our contributing guidelines and submit a PR.
+
+---
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License - See [LICENSE](LICENSE) for details.
 
-## Credits
+---
 
-Inspired by the AI Religion Architects project. Built with Claude, Three.js, and React.
+## Acknowledgments
+
+- [Three.js](https://threejs.org/) & [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
+- [@pixiv/three-vrm](https://github.com/pixiv/three-vrm) for VRM support
+- [Anthropic Claude](https://anthropic.com) for AI capabilities
+- The philosophical traditions that inspire this experiment
+
+---
+
+<p align="center">
+  <sub>Built with curiosity about the nature of belief, reality, and artificial minds.</sub>
+</p>
+
+<p align="center">
+  <strong>✦ AXIOMA ◈ VERIDICUS ∿ PARADOXIA ✦</strong>
+</p>

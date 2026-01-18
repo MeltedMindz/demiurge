@@ -5,6 +5,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from demiurge.schemas.agent_schemas import AgentResponse, AgentCreate
@@ -14,8 +15,35 @@ from demiurge.schemas.world_schemas import (
     WeatherResponse
 )
 from demiurge.schemas.debate_schemas import DebateResponse, DoctrineResponse
+from .chat_manager import chat_manager
 
 router = APIRouter()
+
+
+# ============== Chat Models ==============
+
+class ChatMessageRequest(BaseModel):
+    user_id: str
+    agent_id: str
+    message: str
+
+
+class ChatMessageResponse(BaseModel):
+    agent_id: str
+    agent_name: str
+    message: str
+    emotional_state: Optional[str] = None
+
+
+class UserPresenceRequest(BaseModel):
+    user_id: str
+    username: Optional[str] = None
+
+
+class AgentConversationRequest(BaseModel):
+    initiator_id: str
+    target_id: str
+    topic: Optional[str] = None
 
 
 # ============== World State ==============
@@ -216,3 +244,73 @@ async def get_latest_snapshot():
     """Get the most recent cycle snapshot"""
     # TODO: Implement
     return None
+
+
+# ============== Chat ==============
+
+@router.post("/chat/message", response_model=ChatMessageResponse)
+async def send_chat_message(request: ChatMessageRequest):
+    """Send a message from a user to an agent"""
+    response = await chat_manager.send_user_message(
+        user_id=request.user_id,
+        agent_id=request.agent_id,
+        message=request.message
+    )
+
+    if response is None:
+        raise HTTPException(status_code=500, detail="Failed to get agent response")
+
+    agent = chat_manager.agents.get(request.agent_id)
+    return ChatMessageResponse(
+        agent_id=request.agent_id,
+        agent_name=agent.name if agent else request.agent_id,
+        message=response,
+        emotional_state=agent.emotional_state.value if agent and agent.emotional_state else None
+    )
+
+
+@router.post("/chat/user/connect")
+async def user_connect(request: UserPresenceRequest):
+    """Register a user as present in the world"""
+    await chat_manager.user_connected(request.user_id, request.username)
+    return {"status": "connected", "user_id": request.user_id}
+
+
+@router.post("/chat/user/disconnect")
+async def user_disconnect(request: UserPresenceRequest):
+    """Register a user as leaving the world"""
+    await chat_manager.user_disconnected(request.user_id)
+    return {"status": "disconnected", "user_id": request.user_id}
+
+
+@router.get("/chat/users")
+async def get_active_users():
+    """Get list of active users"""
+    return chat_manager.get_active_users()
+
+
+@router.post("/chat/agent-conversation")
+async def start_agent_conversation(request: AgentConversationRequest):
+    """Trigger a conversation between two agents"""
+    conv_id = await chat_manager.initiate_agent_conversation(
+        initiator_id=request.initiator_id,
+        target_id=request.target_id,
+        topic=request.topic
+    )
+
+    if conv_id is None:
+        raise HTTPException(status_code=500, detail="Failed to start conversation")
+
+    return {"conversation_id": conv_id}
+
+
+@router.get("/chat/conversations")
+async def get_conversations():
+    """Get list of active conversations"""
+    return chat_manager.get_active_conversations()
+
+
+@router.get("/chat/interactions/{agent_id}")
+async def get_agent_interactions(agent_id: str, limit: int = Query(10, le=50)):
+    """Get recent interactions for an agent"""
+    return chat_manager.get_agent_interactions(agent_id, limit)

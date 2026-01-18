@@ -1,10 +1,11 @@
 import { Canvas } from '@react-three/fiber'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import World from './components/World/World'
 import DebatePanel from './components/UI/DebatePanel'
 import AgentInfo from './components/UI/AgentInfo'
 import CycleProgress from './components/UI/CycleProgress'
 import LoadingScreen from './components/UI/LoadingScreen'
+import ChatPanel from './components/UI/ChatPanel'
 import { useWebSocket } from './hooks/useWebSocket'
 import { useWorldStore } from './stores/worldStore'
 
@@ -13,6 +14,7 @@ function App() {
   useWebSocket()
 
   const { isConnected, cycleNumber } = useWorldStore()
+  const [showChat, setShowChat] = useState(false)
 
   return (
     <div className="w-full h-full relative">
@@ -67,7 +69,25 @@ function App() {
         <div className="absolute right-4 top-20 bottom-4 w-96 pointer-events-auto overflow-hidden">
           <DebatePanel />
         </div>
+
+        {/* Chat toggle button */}
+        <button
+          onClick={() => setShowChat(!showChat)}
+          className="absolute bottom-4 right-4 pointer-events-auto px-4 py-2 bg-gradient-to-r from-axioma/20 to-paradoxia/20 border border-white/20 rounded-lg text-white/80 hover:text-white hover:border-white/40 transition-all flex items-center gap-2"
+        >
+          <span className="text-lg">{showChat ? '...' : '...'}</span>
+          <span className="text-sm">{showChat ? 'Close Chat' : 'Commune'}</span>
+        </button>
       </div>
+
+      {/* Chat Panel */}
+      {showChat && (
+        <ChatPanel
+          userId={`user_${Math.random().toString(36).substr(2, 9)}`}
+          username="Wanderer"
+          onClose={() => setShowChat(false)}
+        />
+      )}
 
       {/* Loading screen */}
       <LoadingScreen />
