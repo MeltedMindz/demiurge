@@ -37,6 +37,34 @@ Watch as order battles chaos, logic questions faith, and creativity disrupts cer
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/02-world-closeup.png" alt="World Closeup" width="100%"/>
+  <br>
+  <em>The philosophical landscape: Axioma's golden domain, Veridicus's analytical realm, and Paradoxia's chaotic territory</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/03-dramatic-angle.png" alt="Dramatic View" width="100%"/>
+  <br>
+  <em>Temples and monuments rise as doctrines are accepted—physical manifestations of philosophical discourse</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/04-elevated-view.png" alt="Elevated View" width="100%"/>
+  <br>
+  <em>An elevated view showing the three domains converging at the central debate platform</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/01-world-overview.png" alt="World Overview" width="100%"/>
+  <br>
+  <em>The full interface: Agent stats, debate panel, and 3D world with real-time updates</em>
+</p>
+
+---
+
 ## The Architects
 
 Three philosophical AI entities inhabit the world, each embodying a fundamental approach to understanding reality:
